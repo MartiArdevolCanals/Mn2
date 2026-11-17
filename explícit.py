@@ -23,7 +23,6 @@ r_2 = delta_t2/(delta_x**2)
 r_3 = delta_t3/(delta_x**2)
 
 Tn = [T_in_norm] * N
-Tn1 = Tn.copy()
 
 def explicit(Ti, r, deltat):
     Tn1 = Ti.copy()
@@ -32,38 +31,58 @@ def explicit(Ti, r, deltat):
     return Tn1
 
 x_norm = [i * delta_x for i in range(N)]
-#punts_malalts = [i for i in range(N) if 0.375 <= x_norm[i] <= 0.625]
-#punts_sans = [i for i in range(N) if 0.375>x_norm[i] or x_norm[i] > 0.625]
+x = [i*L*100 for i in x_norm]
 
-#temps = 0
+Nt1 = round(0.025/delta_t1)
 
-#while True:
+for i in range(Nt1):
+    Tn1 = explicit(Tn, r_1, delta_t1)
+    Tn = Tn1.copy()
+    temps1 = i*delta_t1
+    
+T1 = [Ti * T_0 - 273.15 for Ti in Tn]
+plt.plot(x, T1)
+plt.xlabel("Teixit entre els electrodes (cm)")
+plt.ylabel("Temperatura (ºC)")
+plt.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
+plt.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
+plt.axhline(y=50, color="black", linestyle="--", label="50ºC")
+plt.legend()
+plt.show()
 
-    #Tn1 = explicit(Tn, r_1, delta_t1)
+Tn = [T_in_norm] * N    
+Nt2 = round(0.025/delta_t2)
 
-    #Tmax = max(Tn1) * T_0 - 273.15
-    #Tmax_sa = max(Tn1[i] for i in punts_sans) * T_0 - 273.15
-    #temps = temps + delta_t1
-    #Tn = Tn1.copy()
-
-    #if temps >= 0.025:
-        #break
-
-Nt = round(0.025/delta_t2)
-
-for i in range(Nt):
+for i in range(Nt2):
     Tn1 = explicit(Tn, r_2, delta_t2)
     Tn = Tn1.copy()
-    temps = i*delta_t2
+    temps2 = i*delta_t2
     
-    
+T2 = [Ti * T_0 - 273.15 for Ti in Tn]
+plt.plot(x, T2)
+plt.xlabel("Teixit entre els electrodes (cm)")
+plt.ylabel("Temperatura (ºC)")
+plt.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
+plt.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
+plt.axhline(y=50, color="black", linestyle="--", label="50ºC")
+plt.legend()
+plt.show()
 
-x = [i*L*100 for i in x_norm]
-T = [Ti * T_0 - 273.15 for Ti in Tn]
-plt.plot(x, T)
-plt.axvline(x=0.75, color="red", linestyle="--")
-plt.axvline(x=1.25, color="red", linestyle="--")
-plt.axhline(y=50)
+Tn = [T_in_norm] * N 
+Nt3 = round(0.025/delta_t3)
+
+for i in range(Nt3):
+    Tn1 = explicit(Tn, r_3, delta_t3)
+    Tn = Tn1.copy()
+    temps = i*delta_t3
+    
+T3 = [Ti * T_0 - 273.15 for Ti in Tn]
+plt.plot(x, T3)
+plt.xlabel("Teixit entre els electrodes (cm)")
+plt.ylabel("Temperatura (ºC)")
+plt.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
+plt.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
+plt.axhline(y=50, color="black", linestyle="--", label="50ºC")
+plt.legend()
 plt.show()
     
-print(temps)
