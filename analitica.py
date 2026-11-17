@@ -1,11 +1,31 @@
 import math
 import matplotlib.pyplot as plt
+# PARÀMETRES I MÉS...
+c_v = 3698
+ro = 1081
+k = 0.56
+sigma = 0.472
+T_in = 36.5 + 273.15  # Temperatura inicial en Kelvin
+T_c = 36.5 + 273.15  # Temperatura de contorn
+V = 40
+h = 0.02
+L = 0.02
+
+t_0 = (c_v * ro * (L**2)) / k
+T_0 = (t_0 * sigma * (V**2)) / (c_v * ro * 2 * (h**2))
+
+T_in_norm = T_in / T_0
+T_c_norm = T_c / T_0
+
+N = 101
+delta_x = 1 / (N - 1)
+t_a = 0.025  # Temps adimensional d'avaluació
+
 
 #DEFINICIÓ SOLUCIÓ ANALÍTICA 
 # ho calculem per a un punt x, temps t 
-# fixem la temperatura del cos T_c=36,5 important per les condicions inicials i de contorn
 # i ho calculem per a 50 termes de la sèrie de fourier
-def solucio_analitica(x, t, T_c=0.0, num_termes=50):
+def s_analitica_ad(x, t, num_termes=50):
   
   sumatori = 0.0
 
@@ -25,22 +45,21 @@ def solucio_analitica(x, t, T_c=0.0, num_termes=50):
     # Sèrie completa
     sumatori += b_n * terme_temporal * terme_espacial
 
-  return T_c + sumatori
+  return T_c_norm + sumatori #T_c_norm actua com a base del sistema adimensional
 
 
-
-N = 101
-dx = 1.0 / (N - 1)
-t_a = 0.025  
-
+#CÀLCUL
 # Mallat espacial x de 0 a 1
-x_m = [i * dx for i in range(N)]
+x_m = [i * delta_x for i in range(N)]
+x_real = [x * L * 100 for x in x_m]  # Convertit a cm (de 0 a 2 cm)
 
 # Calculem la solució analítica per a tot el vector
-T_analitica = [solucio_analitica(x, t_a) for x in x_m]
+T_analitica = [s_analitica_ad(x, t_a) for x in x_m]
+T_real=[Ti * T_0 - 273.15 for Ti in T_analitica]
 
-plt.plot(x_m, T_analitica)
-#plt.axvline(x=0.75, color="red", linestyle="--")
-#plt.axvline(x=1.25, color="red", linestyle="--")
+#PLOT
+plt.plot(x_real, T_real)
+plt.axvline(x=0.75, color="red", linestyle="--")
+plt.axvline(x=1.25, color="red", linestyle="--")
 #plt.axhline(y=50)
 plt.show()
