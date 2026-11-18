@@ -51,17 +51,22 @@ def crank_nicolson(T, r, delta_t, tolerancia=1e-10):
     return Tnova
 
 Nt1 = round(0.025/delta_t1)
-Nt2 = round(0.025)
-
+Nt2 = round(0.025/delta_t2)
+T1 = Tn.copy()
+T2 = Tn.copy()
 for i in range(Nt1):
-    T1=crank_nicolson(Tn, r_1, delta_t1)
+    T1=crank_nicolson(T1, r_1, delta_t1)
+    
 
 for i in range(Nt2):
-    T2=crank_nicolson(Tn, r_2, delta_t2)
+    T2=crank_nicolson(T2, r_2, delta_t2)
 
-errors1 = [abs(T1[i] - T_real[i]) for i in range(N)]
+T1_celsius = [temp*T_0 - 273.15 for temp in T1]
+T2_celsius = [temp*T_0 - 273.15 for temp in T2]
+
+errors1 = [abs(T1_celsius[i] - T_real[i]) for i in range(N)]
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(9, 8), sharex=True)
-ax1.plot(x, T1)
+ax1.plot(x, T1_celsius)
 ax1.set_xlabel("Teixit entre els electrodes (cm)")
 ax1.set_ylabel("Temperatura (ºC)")
 ax1.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
@@ -74,4 +79,21 @@ ax2.set_xlabel("Posició x (cm)")
 ax2.set_ylabel("Error absolut (°C)")
 ax2.set_title("Error respecte a la solució analítica")
 plt.tight_layout()
-plt.show
+plt.show()
+
+errors2 = [abs(T2_celsius[i] - T_real[i]) for i in range(N)]
+fig, (ax3, ax4) = plt.subplots(2, 1, figsize=(9, 8), sharex=True)
+ax3.plot(x, T2_celsius)
+ax3.set_xlabel("Teixit entre els electrodes (cm)")
+ax3.set_ylabel("Temperatura (ºC)")
+ax3.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
+ax3.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
+ax3.axhline(y=50, color="black", linestyle="--", label="50ºC")
+ax3.legend()
+ax3.set_title("Distribució de temperatura a t = 0.025 cas r=0,5")
+ax4.plot(x, errors2, label="Error absolut", color="purple")
+ax4.set_xlabel("Posició x (cm)")
+ax4.set_ylabel("Error absolut (°C)")
+ax4.set_title("Error respecte a la solució analítica")
+plt.tight_layout()
+plt.show()
