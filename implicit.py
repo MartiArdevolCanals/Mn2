@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-
+from analitica import T_real
 #Mètode implícit, N=101, t_a=0.025
 #\Delta t=(\Delta x)^2, \gamma=1.
 #A és una matriu quadrada de 99x99
