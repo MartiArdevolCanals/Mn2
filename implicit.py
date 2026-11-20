@@ -124,5 +124,39 @@ L_0 = 2.0        # Longitud total en cm
 T_0 = 674.29     # Temperatura de referència en K
 
 x_cm = [val * L_0 for val in x_adim]
-T_celsius = [(val * T_0) - 273.15 for val in T]
+T_celsius1 = [(val * T_0) - 273.15 for val in T_1]
+T_celsius2 = [(val * T_0) - 273.15 for val in T_2]
+errors1 = [abs(T_celsius1[i] - T_real[i]) for i in range(N)]
+errors2 = [abs(T_celsius2[i] - T_real[i]) for i in range(N)]
 
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(9, 8), sharex=True)
+ax1.plot(x_cm, T_celsius1)
+ax1.set_xlabel("Teixit entre els electrodes (cm)")
+ax1.set_ylabel("Temperatura (ºC)")
+ax1.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
+ax1.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
+ax1.axhline(y=50, color="black", linestyle="--", label="50ºC")
+ax1.legend()
+ax1.set_title("Distribució de temperatura a t = 0.025 cas r=0.5, Euler implícit")
+ax2.plot(x_cm, errors1, label="Error absolut", color="purple")
+ax2.set_xlabel("Posició x (cm)")
+ax2.set_ylabel("Error absolut (°C)")
+ax2.set_title("Error respecte a la solució analítica")
+plt.tight_layout()
+plt.show()
+
+fig, (ax3, ax4) = plt.subplots(2, 1, figsize=(9, 8), sharex=True)
+ax3.plot(x_cm, T_celsius2)
+ax3.set_xlabel("Teixit entre els electrodes (cm)")
+ax3.set_ylabel("Temperatura (ºC)")
+ax3.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
+ax3.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
+ax3.axhline(y=50, color="black", linestyle="--", label="50ºC")
+ax3.legend()
+ax3.set_title("Distribució de temperatura a t = 0.025 cas r=1, Euler implícit")
+ax4.plot(x_cm, errors2, label="Error absolut", color="purple")
+ax4.set_xlabel("Posició x (cm)")
+ax4.set_ylabel("Error absolut (°C)")
+ax4.set_title("Error respecte a la solució analítica")
+plt.tight_layout()
+plt.show()
