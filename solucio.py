@@ -50,4 +50,7 @@ plt.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
 plt.axhline(y=50, color="black", linestyle="--", label="50ºC")
 plt.legend()
 plt.show()
-print(temps)
+
+temps_nonorm = temps*t_0
+print(temps_nonorm)
+print(T[37])
