@@ -54,3 +54,11 @@ plt.show()
 temps_nonorm = temps*t_0
 print(temps_nonorm)
 print(T[37])
+
+
+Ntcont = 100
+for i in range(Ntcont):
+    t_continua = crank_nicolson(Tn1, r_2, 0)
+
+plt.plot(x, t_continua)
+plt.show()
