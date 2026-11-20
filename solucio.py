@@ -52,7 +52,7 @@ plt.legend()
 plt.show()
 
 temps_nonorm = temps*t_0
-print(temps_nonorm)
+print("Temps per a que el procediment sigui més eficaç:", temps_nonorm, "s")
 
 
 
