@@ -1,14 +1,18 @@
 import matplotlib.pyplot as plt
 from analitica import T_real
 #Mètode implícit, N=101, t_a=0.025
-#\Delta t=(\Delta x)^2, \gamma=1.
+#\Delta t=(\Delta x)^2 o Delta t=0.5*(\Delta x)^2, \gamma=1.
 #A és una matriu quadrada de 99x99
-gamma = 1
+gamma1 = 0.5
+gamma2 = 1
 t_a = 0.025 #Falta adimensionalitzar-ho
 N = 101
 dx = 1/(N-1)
-dt = dx**2 #En aquest cas, ja que gamma=Delta t/ (Delta x)^2, i gamma = 1
-num_instants = round(t_a/dt)
+dt1 = 0.5*dx**2 #En aquest cas, ja que gamma=Delta t/ (Delta x)^2, i gamma = 1
+num_instants1 = round(t_a/dt1)
+dt2 = dx**2
+num_instants2 = round(t_a/dt2)
+
 
 
 
@@ -28,16 +32,26 @@ def calcular_b(T_anterior, gamma, dt, T_ini):
 
     return b
 
-A = [[0.0 for j in range(99)] for i in range(99)]
+A_1 = [[0.0 for j in range(99)] for i in range(99)]
+A_2 = [[0.0 for j in range(99)] for i in range(99)]
 
 for i in range(99):
-    A[i][i] = 1 + 2*gamma
+    A_1[i][i] = 1 + 2*gamma1
 
     if i > 0:
-        A[i][i-1] = -gamma
+        A_1[i][i-1] = -gamma1
 
     if i < 98:
-        A[i][i+1] = -gamma
+        A_1[i][i+1] = -gamma1
+
+for i in range(99):
+    A_2[i][i] = 1 + 2*gamma2
+
+    if i > 0:
+        A_2[i][i-1] = -gamma2
+
+    if i < 98:
+        A_2[i][i+1] = -gamma2
 
 def gauss_seidel(A, b_0, T_0, tol = 1e-10, iteracio_max = 1000):
 
@@ -71,32 +85,37 @@ def gauss_seidel(A, b_0, T_0, tol = 1e-10, iteracio_max = 1000):
     return T, iteracio_max
 
 #Falta definir el num_instants que tenim, s'ha de fer amb el t_a adimensionalitzat (t_a s'ha d'adimensionalitzar?)
-
-for i in range(num_instants):
+T_1 = T.copy()
+for i in range(num_instants1):
 
     #Primer s'ha de calcular b ja que es troba amb la temperatura anterior (abans d'aplicar gauss-seidel)
-    b = calcular_b(T, gamma, dt, T_ini)
+    b_1 = calcular_b(T_1, gamma1, dt1, T_ini)
 
     # Resolem amb Gauss-Seidel les 99 incògnites centrals (coneixem els extrems)
-    T_centrals, iteracions = gauss_seidel(A, b, T[1:-1])
+    T_centrals, iteracions = gauss_seidel(A_1, b_1, T_1[1:-1])
 
     #Ho apliquem a les temperatures amb els extrems fixos, això s'aplicarà al nou vector b i així successivament
-    T = [T_ini] + T_centrals + [T_ini]
+    T_1 = [T_ini] + T_centrals + [T_ini]
 
     #print("Instant:", i+1)
     #print("Iteracions Gauss-Seidel:", iteracions)
     #print("Temperatures:", T)
+T_2 = T.copy()
+for i in range(num_instants2):
+
+    #Primer s'ha de calcular b ja que es troba amb la temperatura anterior (abans d'aplicar gauss-seidel)
+    b_2 = calcular_b(T_2, gamma2, dt2, T_ini)
+
+    # Resolem amb Gauss-Seidel les 99 incògnites centrals (coneixem els extrems)
+    T_centrals, iteracions = gauss_seidel(A_2, b_2, T_2[1:-1])
+
+    #Ho apliquem a les temperatures amb els extrems fixos, això s'aplicarà al nou vector b i així successivament
+    T_2 = [T_ini] + T_centrals + [T_ini]
 
 
 # Representem gràficament els resultats
 x = [j*dx for j in range(N)]
 
-plt.plot(x, T)
-plt.xlabel("Posicio x adimensional")
-plt.ylabel("Temperatura adimensional")
-plt.title("Euler implicit")
-plt.grid()
-plt.show()
 
 # --- 2. Gràfica en variables FÍSIQUES (no normalitzades) ---
 x_adim = [j * dx for j in range(N)]
@@ -107,12 +126,3 @@ T_0 = 674.29     # Temperatura de referència en K
 x_cm = [val * L_0 for val in x_adim]
 T_celsius = [(val * T_0) - 273.15 for val in T]
 
-plt.subplot(1, 2, 2)
-plt.plot(x_cm, T_celsius, color='red')
-plt.xlabel("Posició x (cm)")
-plt.ylabel("Temperatura (°C)")
-plt.title("Variables físiques (reals)")
-plt.grid(True)
-
-plt.tight_layout()
-plt.show()
