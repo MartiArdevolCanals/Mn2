@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from analitica import T_real
+#Parametres
 c_v = 3698
 ro = 1081
 k = 0.56
@@ -20,11 +21,17 @@ delta_t2 = 0.5*(delta_x**2)
 r_1 = delta_t1/(delta_x**2)
 r_2 = delta_t2/(delta_x**2)
 
+#Definim el mallat espacial normalitzat i no normalitzat 
 x_norm = [i * delta_x for i in range(N)]
 x = [i*L*100 for i in x_norm]
+#Definim la temperatura normalitzada inicial en cada punt
 Tn = [T_in_norm] * N
 
-
+#Definim una funció on es s'ajunta el mètode de Crank-Nicolson amb Gauss-Seidel (aquest per resoldre el sistema que ens dona Crank-Nicolson)
+#Creem una llista que guarda els parametres b per cada punt (inicialment tots son 0)
+#Seguidament calcula b en tots els punts 
+#Després es calcula la temperatura en cada punt amb el b respectiu utilitzant la formula de Crank-Nicolson
+#Aquest pas es repetix utilitzant la llista de temperatures calculada més recent, fins que la diferència entre una llista de temperatures i l'anterior és més petita que la tolerància imposada
 def crank_nicolson(T, r, delta_t, tolerancia=1e-10):
 
     b = [0.0] * N
@@ -50,10 +57,12 @@ def crank_nicolson(T, r, delta_t, tolerancia=1e-10):
 
     return Tnova
 
+#Definim la quantitat de passos temporals
 Nt1 = round(0.025/delta_t1)
 Nt2 = round(0.025/delta_t2)
 T1 = Tn.copy()
 T2 = Tn.copy()
+#Calculem la temperatura normalitzada en cada punt en el temps d'avaluació repetint la funció de Crank-Nicolson Nt vegades (ho fem pels dos casos)
 for i in range(Nt1):
     T1=crank_nicolson(T1, r_1, delta_t1)
     
@@ -61,10 +70,15 @@ for i in range(Nt1):
 for i in range(Nt2):
     T2=crank_nicolson(T2, r_2, delta_t2)
 
+#Calculem les temperatures no normalitzades en graus Celsius
 T1_celsius = [temp*T_0 - 273.15 for temp in T1]
 T2_celsius = [temp*T_0 - 273.15 for temp in T2]
 
+#Calculem l'error amb la solució analítica trobada
 errors1 = [abs(T1_celsius[i] - T_real[i]) for i in range(N)]
+
+#Fem que la figura només surti quan executem aquest codi
+#Fem les figures igual que pels mètodes anteriors
 if __name__ == "__main__":
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(9, 8), sharex=True)
     ax1.plot(x, T1_celsius)

@@ -57,9 +57,3 @@ x_real = [x * L * 100 for x in x_m]  # Convertit a cm (de 0 a 2 cm)
 T_analitica = [s_analitica_ad(x, t_a) for x in x_m]
 T_real=[Ti * T_0 - 273.15 for Ti in T_analitica]
 
-#PLOT
-#plt.plot(x_real, T_real)
-#plt.axvline(x=0.75, color="red", linestyle="--")
-#plt.axvline(x=1.25, color="red", linestyle="--")
-#plt.axhline(y=50)
-#plt.show()

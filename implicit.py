@@ -100,16 +100,15 @@ for i in range(num_instants1):
     #print("Instant:", i+1)
     #print("Iteracions Gauss-Seidel:", iteracions)
     #print("Temperatures:", T)
+#Repetim el mateix per l'altre cas
 T_2 = T.copy()
 for i in range(num_instants2):
 
-    #Primer s'ha de calcular b ja que es troba amb la temperatura anterior (abans d'aplicar gauss-seidel)
+    
     b_2 = calcular_b(T_2, gamma2, dt2, T_ini)
 
-    # Resolem amb Gauss-Seidel les 99 incògnites centrals (coneixem els extrems)
     T_centrals, iteracions = gauss_seidel(A_2, b_2, T_2[1:-1])
 
-    #Ho apliquem a les temperatures amb els extrems fixos, això s'aplicarà al nou vector b i així successivament
     T_2 = [T_ini] + T_centrals + [T_ini]
 
 
@@ -117,7 +116,7 @@ for i in range(num_instants2):
 x = [j*dx for j in range(N)]
 
 
-# --- 2. Gràfica en variables FÍSIQUES (no normalitzades) ---
+#fem les gràfiques com en el mètode d'Euler explícit
 x_adim = [j * dx for j in range(N)]
 
 L_0 = 2.0        # Longitud total en cm

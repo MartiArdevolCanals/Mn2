@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from crank_nicolson import crank_nicolson
+#Parametres
 c_v = 3698
 ro = 1081
 k = 0.56
@@ -21,14 +22,19 @@ delta_t2 = 0.5*(delta_x**2)
 r_1 = delta_t1/(delta_x**2)
 r_2 = delta_t2/(delta_x**2)
 
+#Definim mallat espacial normalitzat i no normalitzat
 x_norm = [i * delta_x for i in range(N)]
 x = [i*L*100 for i in x_norm]
+#Definim temperatures inicials normalitzades en cada punt
 Tn = [T_in_norm] * N
 
+#Definim l'espai del mallat espacial normalitzat que forma part de teixit malalt i sa
 punts_malalts = [i for i in range(N) if 0.375 <= x_norm[i] <= 0.625]
 
 punts_sans = [i for i in range(N) if x_norm[i] < 0.375 or x_norm[i] > 0.625]
 
+#Pel mètode de Crank-Nicolson, reptint-lo (fent iteracions temporals), fins que la temperatura màxima del teixit sa superi 50ºC o la temperatura màxima del teixit malalt superi 80ºC
+#Per cada iteració li sumem una delta t escollida al temps, així calculem el temps on parar
 temps = 0
 
 while True:
@@ -44,14 +50,16 @@ while True:
     Tn = Tn1.copy()
     temps = temps + delta_t2
 
+#Calculem la temperatura no normalitzada en graus Celsius a cada punt
 T = [temp*T_0 - 273.15 for temp in Tn1]
+#Fem el gràfic de la temperatura per cada punt espacial
 plt.plot(x,T)
 plt.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
 plt.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
 plt.axhline(y=50, color="black", linestyle="--", label="50ºC")
 plt.legend()
 plt.show()
-
+#Imprimim el temps on s'ha de parar
 temps_nonorm = temps*t_0
 print("Temps per a que el procediment sigui més eficaç:", temps_nonorm, "s")
 
@@ -79,8 +87,6 @@ while True:
   Tn = Tn1.copy()
   temps += delta_t2
 
-  # Desem el perfil de temperatura cada 5 passos (per evitar que el GIF vagi massa lent o pesi molt)
-  #if pas % 5 == 0:
 
   #a cada pas ens guardem les temperatures de cada punt i el temps
   T_celsius = [temp * T_0 - 273.15 for temp in Tn1]
@@ -89,11 +95,8 @@ while True:
   
   pas += 1
 
-  # Opcional: posar un límit de fotogrames si la simulació s'allarga massa
-  #if len(frames_temperatures) >= 300:
-  # break
 
-# 2. Configuració de la figura de l'animació (mirar lo dels set_)
+# 2. Configuració de la figura de l'animació 
 
 #llenç on dibuixem tot
 #fig=llenç físic sencer
@@ -127,17 +130,9 @@ ax.legend(loc='upper right', fontsize=9)
 t_text = ax.text(0.025,0.85,'',transform=ax.transAxes,fontsize=11,bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
 #posició (0.025,0.85), comença sense res escrit (''),
 # amb (transform=ax.transAxes) utilitzes coordenades relatives (0,0) inf esq  i (1,1) sup dret
-#serveix pq la caixa quedi sempre en el mateix lloc sense importar l'escala dels eixos
+#serveix perque la caixa quedi sempre en el mateix lloc sense importar l'escala dels eixos
 #bbox=dict(boxstyle='round'...) defineix com és la capsa rodona...
 
-# Funcions d'inicialització (saltable) 
-def init():
- line.set_data([], [])
- t_text.set_text('')
- return line, t_text
-#se suposa q abans d'executar l'evolució s'exectuta aquesta 
-# és per tenir una base amb la qual treballar amb tot a 0, ben net
-#ns si optimitza o q, però no es nota tant
 
 #actualització de l'animació
 def animate(i):
@@ -145,13 +140,10 @@ def animate(i):
   t_text.set_text(f'Temps real: {temps_registrats[i]:.4f} s') #agafa 4 decimals
   return line, t_text
 
-ani = animation.FuncAnimation(fig,animate,init_func=init,frames=len(frames_temperatures),interval=40,blit=True,)
+ani = animation.FuncAnimation(fig,animate,frames=len(frames_temperatures),interval=40,blit=True,)
 
 # 3. Desar el fitxer GIF 
 # (assegura't de tenir pillow instal·lat: pip install pillow)
 ani.save('evolucio_ablacio.gif', writer='pillow', fps=25)
-
-#sn el volem guardar
-#plt.show()
 plt.close()
 
