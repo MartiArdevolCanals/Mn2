@@ -115,3 +115,6 @@ if __name__ == "__main__":
     ax4.set_title("Error respecte a la solució analítica")
     plt.tight_layout()
     plt.show()
+
+print("Error màxim gamma=0.5:", max(errors1), "°C")
+print("Error màxim gamma=1:", max(errors2), "°C")
