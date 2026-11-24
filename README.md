@@ -1,2 +1,7 @@
-# Mn2
-
+L'enllaç que hi ha a l'informe hauria de portar a aquesta carpeta amb tots els fitxers on estant tots els codis utilitzats.
+El fitxer analitica.py conté el codi per trobar la solució analítica. 
+El fitxer explícit.py conté el codi on s'utilitza el mètode d'Euler explícit, quan s'executa imprimeix tres figures on es representa la temperatura al temps d'avaluació i l'error per cada cas i també imprimeix el valor màxim de l'error de cada cas.
+El fitxer implicit.py conté el codi on s'utilitza el mètode d'Euler implícit, quan s'executa imprimeix tres figures on es representa la temperatura al temps d'avaluació i l'error per cada cas i també imprimeix el valor màxim de l'error de cada cas.
+El fitxer crank_nicolson.py conté el codi on s'utilitza el mètode de Crank-Nicolson, quan s'executa imprimeix tres figures on es representa la temperatura al temps d'avaluació i l'error per cada cas i també imprimeix el valor màxim de l'error de cada cas.
+El fitxer solucio.py conté el codi utilitzat per trobar el temps que soluciona el problema, quan s'excecuta imprimeix una figura on es veu la temperatura en el temps final i el temps final, també crea un fitxer on es veu l'animació.
+Cada codi s'ha d'executar per separat en el seu fitxer corresponent i no hauria d'haver cap barreja.
