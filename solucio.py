@@ -54,9 +54,9 @@ while True:
 T = [temp*T_0 - 273.15 for temp in Tn1]
 #Fem el gràfic de la temperatura per cada punt espacial
 plt.plot(x,T)
-plt.axvline(x=0.75, color="red", linestyle="--", label="inici teixit malalt")
-plt.axvline(x=1.25, color="red", linestyle="--", label="final teixit malalt")
-plt.axhline(y=50, color="black", linestyle="--", label="50ºC")
+plt.axvline(x=0.75, color="red", linestyle="--", label="Inici teixit malalt (0,75cm)")
+plt.axvline(x=1.25, color="red", linestyle="--", label="Final teixit malalt (1,25 cm)")
+plt.axhline(y=50, color="black", linestyle="--", label="Llindar Ablació (50 ºC)")
 plt.legend()
 plt.show()
 #Imprimim el temps on s'ha de parar
@@ -85,7 +85,7 @@ while True:
     break
 
   Tn = Tn1.copy()
-  temps += delta_t2
+  temps = temps + delta_t2
 
 
   #a cada pas ens guardem les temperatures de cada punt i el temps
@@ -96,43 +96,44 @@ while True:
   pas += 1
 
 
-# 2. Configuració de la figura de l'animació 
-
-#llenç on dibuixem tot
-#fig=llenç físic sencer
-#ax=zona interna on es dibuixa la gràfica, amb els eixos X i Y
-#figsize ample x llarg (proporcions)
+#Configuració de la figura de l'animació 
 fig, ax = plt.subplots(figsize=(9, 5))
-
-#he d'acabar de mirar com funciona... li he preguntat però he hagut de marxar jeje
-(line,) = ax.plot([], [], lw=2, color='blue', label='Perfil de Temperatura')
 
 #limits eix X
 ax.set_xlim(0, L * 100)
-# Ajusta els límits de l'eix Y segons les temperatures que s'assoleixin (ex: de 35ºC a 85ºC)
+#límits de l'eix Y segons les temperatures que s'assoleixin 
+# ho hem posat entre 35ºC i 85ºC
 ax.set_ylim(35,85)
 
 #titols eixos
-ax.set_xlabel('Posició $x$ a la paret cardíaca (cm)', fontsize=11)
-ax.set_ylabel('Temperatura $T$ (ºC)', fontsize=11)
+ax.set_xlabel('Posició x a la paret cardíaca (cm)', fontsize=11)
+ax.set_ylabel('Temperatura (ºC)', fontsize=11)
 
 # Línies de referència fixes
 ax.axvline(x=0.75, color='red', linestyle='--', label='Inici teixit malalt (0.75 cm)')
 ax.axvline(x=1.25, color='red', linestyle='--', label='Final teixit malalt (1.25 cm)')
 ax.axhline(y=50.0, color='black', linestyle=':', label='Llindar Ablació (50 ºC)')
-#ens la podem petar i així el grafic es veu més gran i s'aprecia més l'evolució
 ax.axhline(y=80.0, color='black', linestyle=':', label='Risc Trombosi (80 ºC)')
 
 #llegenda
 ax.legend(loc='upper right', fontsize=9)
 
-# Text dinàmic per mostrar el temps transcorregut a cada fotograma NO CAL
+#Perfil temperatura
+(line,) = ax.plot([], [], lw=2, color='blue', label='Perfil de Temperatura')
+#escrivim (line,) perquè en comptes d'una llista volem un objecte el qual li puguem aplicar ordres
+# això passa pq ax.plot et retorna una llista amb un únic element, la línia 
+#la variable linia no seria la línia en si, sinó que seria la llista sencera que conté la línia a dintre, 
+# aleshores la coma el que fa és dir que obri aquesta llista, 
+# que extregui l'únic element que hi ha a dins, i el guardi directament a la variable line
+#això definitivament permet aplicar ordres com a una variable (line.set_data)
+
+# Text dinàmic per mostrar el temps transcorregut a cada fotograma
 t_text = ax.text(0.025,0.85,'',transform=ax.transAxes,fontsize=11,bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-#posició (0.025,0.85), comença sense res escrit (''),
-# amb (transform=ax.transAxes) utilitzes coordenades relatives (0,0) inf esq  i (1,1) sup dret
+#posició (0.025,0.85),
+# comença sense res escrit (''),
+# amb (transform=ax.transAxes) utilitzem coordenades relatives (0,0) inf esq  i (1,1) sup dret
 #serveix perque la caixa quedi sempre en el mateix lloc sense importar l'escala dels eixos
 #bbox=dict(boxstyle='round'...) defineix com és la capsa rodona...
-
 
 #actualització de l'animació
 def animate(i):
@@ -140,10 +141,15 @@ def animate(i):
   t_text.set_text(f'Temps real: {temps_registrats[i]:.4f} s') #agafa 4 decimals
   return line, t_text
 
-ani = animation.FuncAnimation(fig,animate,frames=len(frames_temperatures),interval=40,blit=True,)
+#fem l'animació
+ani = animation.FuncAnimation(fig,animate,frames=len(frames_temperatures),interval=40,blit=True)
+# Els frames=nombre de fotogrames (hem posat que sigui = a tots els pasos fets), 
+# interval=40 significa que espera 40ms abans de canviar de fotograma, 
+# blit=True el que fa és optimitzar, ho fa només redibuixant allò que canvia
 
-# 3. Desar el fitxer GIF 
-# (assegura't de tenir pillow instal·lat: pip install pillow)
-ani.save('evolucio_ablacio.gif', writer='pillow', fps=25)
+
+#Desem el fitxer GIF 
+#(assegureu-vos de tenir pillow instal·lat: pip install pillow)
+ani.save('evolucio_ablacio.gif', writer='pillow', fps=40)
 plt.close()
 
