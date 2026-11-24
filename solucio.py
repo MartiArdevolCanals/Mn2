@@ -54,8 +54,10 @@ while True:
 T = [temp*T_0 - 273.15 for temp in Tn1]
 #Fem el gràfic de la temperatura per cada punt espacial
 plt.plot(x,T)
-plt.axvline(x=0.75, color="red", linestyle="--", label="Inici teixit malalt (0,75cm)")
-plt.axvline(x=1.25, color="red", linestyle="--", label="Final teixit malalt (1,25 cm)")
+plt.set_xlabel("Teixit entre els electrodes (cm)")
+plt.set_ylabel("Temperatura (ºC)")
+plt.axvline(x=0.75, color="red", linestyle="--", label="Inici teixit malalt (0.75cm)")
+plt.axvline(x=1.25, color="red", linestyle="--", label="Final teixit malalt (1.25 cm)")
 plt.axhline(y=50, color="black", linestyle="--", label="Llindar Ablació (50 ºC)")
 plt.legend()
 plt.show()
@@ -64,7 +66,7 @@ temps_nonorm = temps*t_0
 print("Temps per a que el procediment sigui més eficaç:", temps_nonorm, "s")
 
 # Reiniciem variables per simular i guardar els fotogrames (frames) pel GIF 
-# (tot a cond inicials) temps 36,5 ; temps i pas 0
+# (tot a cond inicials) temps 36.5 ; temps i pas 0
 Tn = [T_in_norm] * N
 temps = 0
 pas = 0
