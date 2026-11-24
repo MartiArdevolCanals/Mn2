@@ -54,8 +54,8 @@ while True:
 T = [temp*T_0 - 273.15 for temp in Tn1]
 #Fem el gràfic de la temperatura per cada punt espacial
 plt.plot(x,T)
-plt.set_xlabel("Teixit entre els electrodes (cm)")
-plt.set_ylabel("Temperatura (ºC)")
+plt.xlabel("Teixit entre els electrodes (cm)")
+plt.ylabel("Temperatura (ºC)")
 plt.axvline(x=0.75, color="red", linestyle="--", label="Inici teixit malalt (0.75cm)")
 plt.axvline(x=1.25, color="red", linestyle="--", label="Final teixit malalt (1.25 cm)")
 plt.axhline(y=50, color="black", linestyle="--", label="Llindar Ablació (50 ºC)")
