@@ -4,4 +4,6 @@ El fitxer explícit.py conté el codi on s'utilitza el mètode d'Euler explícit
 El fitxer implicit.py conté el codi on s'utilitza el mètode d'Euler implícit, quan s'executa imprimeix tres figures on es representa la temperatura al temps d'avaluació i l'error per cada cas i també imprimeix el valor màxim de l'error de cada cas.
 El fitxer crank_nicolson.py conté el codi on s'utilitza el mètode de Crank-Nicolson, quan s'executa imprimeix tres figures on es representa la temperatura al temps d'avaluació i l'error per cada cas i també imprimeix el valor màxim de l'error de cada cas.
 El fitxer solucio.py conté el codi utilitzat per trobar el temps que soluciona el problema, quan s'excecuta imprimeix una figura on es veu la temperatura en el temps final i el temps final, també crea un fitxer on es veu l'animació.
+El fitxer comparació.py conté elcodi utilitzat per fer el gràfic on es comparen les errors i quan s'executa el proporciona.
+També hi ha el gif, fet en el codi de solucio.py, que mostra l'animació.
 Cada codi s'ha d'executar per separat en el seu fitxer corresponent i no hauria d'haver cap barreja.
